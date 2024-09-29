@@ -1,3 +1,5 @@
+## This is just a clone of the elestio glpi with some modifications for apache server and php
+
 # GLPI
 
 [GLPI](https://glpi-project.org/) is the most complete open source service management software.
