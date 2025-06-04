@@ -24,7 +24,7 @@ I’ve actively contributed to ISO 27001, SOC 2, and HIPAA readiness efforts, he
 ### 1. [Infrastructure Monitoring Stack](monitoring)
 **Description**: This project provides a complete monitoring and alerting stack built with **Prometheus**, **Loki**, **Grafana**, and **Alertmanager**. It includes metric collection, log aggregation, visualization dashboards, and alert routing. The setup is designed to monitor system health, container performance, application metrics, and external endpoints, providing deep observability across infrastructure and services.
 
-**Technologies Used**: List of technologies.
+**Technologies Used**:
 * **Prometheus**: Metrics collection and alerting.
 * **cAdvisor**: Container-level resource usage and performance metrics provider.
 * **Alertmanager**: Handles and routes alerts from Prometheus.
