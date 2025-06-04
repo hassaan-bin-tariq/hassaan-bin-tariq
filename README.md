@@ -21,12 +21,23 @@ I’ve actively contributed to ISO 27001, SOC 2, and HIPAA readiness efforts, he
 
 
 ## Projects
-### 1. [Project Name](link-to-repository)
-**Description**: Brief description of the project.
+### 1. [Infrastructure Monitoring Stack](monitoring)
+**Description**: This project provides a complete monitoring and alerting stack built with **Prometheus**, **Loki**, **Grafana**, and **Alertmanager**. It includes metric collection, log aggregation, visualization dashboards, and alert routing. The setup is designed to monitor system health, container performance, application metrics, and external endpoints, providing deep observability across infrastructure and services.
 
 **Technologies Used**: List of technologies.
+* **Prometheus**: Metrics collection and alerting.
+* **cAdvisor**: Container-level resource usage and performance metrics provider.
+* **Alertmanager**: Handles and routes alerts from Prometheus.
+* **Grafana**: Metrics visualization and dashboarding.
+* **Blackbox Exporter**: Probes HTTP, HTTPS, DNS, TCP endpoints.
+* **Node Exporter**: Hardware and OS-level metrics exporter.
+* **Speedtest Exporter**: Measures internet speed metrics.
+* **Docker**: Containerization for all monitored services.
+* **YAML**: For defining Prometheus rules and alert configurations.
+* **Microsoft Teams Webhook**: Integration with Alertmanager for real-time alerts.
+* **Linux Servers**: Target environment for metrics and exporters.
 
-[Link to Repository](link-to-repository)
+[Infrastructure Monitoring Stack](https://github.com/hassaan-bin-tariq/hassaan-bin-tariq/tree/main/monitoring)
 
 ### 2. [Project Name](link-to-repository)
 **Description**: Brief description of the project.
@@ -37,5 +48,4 @@ I’ve actively contributed to ISO 27001, SOC 2, and HIPAA readiness efforts, he
 
 ## Get in Touch
 - [LinkedIn](https://www.linkedin.com/in/hassaanbintariq)
-- [Twitter](your-twitter-profile)
-- [Personal Website](your-personal-website)
+- [Email](mailto:hassaantariq89@gmail.com)
