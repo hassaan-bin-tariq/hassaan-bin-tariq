@@ -1,0 +1,90 @@
+groups:
+- name: Blackbox_Exporter
+  rules:
+    # Website is down / Blackbox probe failed
+    - alert: BlackboxProbeFailed
+      expr: 'probe_success == 0'
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Blackbox probe failed (instance {{ $labels.instance }})"
+        description: "The Blackbox probe failed to reach the target.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    # Blackbox Exporter configuration reload failed
+    - alert: BlackboxConfigurationReloadFailure
+      expr: 'blackbox_exporter_config_last_reload_successful != 1'
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Blackbox Exporter config reload failure (instance {{ $labels.instance }})"
+        description: "Blackbox Exporter failed to reload its configuration.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    # Slow Blackbox probe
+    - alert: BlackboxSlowProbe
+      expr: 'avg_over_time(probe_duration_seconds[2m]) > 4'
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Blackbox probe slow (instance {{ $labels.instance }})"
+        description: "Blackbox probe took more than 4 seconds to complete.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    # HTTP response code failure (not between 200-399)
+    - alert: BlackboxProbeHttpFailure
+      expr: 'probe_http_status_code < 200 OR (probe_http_status_code >= 400 AND probe_http_status_code != 403 AND probe_http_status_code != 404)'
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "HTTP failure detected (instance {{ $labels.instance }})"
+        description: "Unexpected HTTP status code (not in 200-399, 403, or 404).\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    # SSL certificate expiration warnings
+    - alert: BlackboxSslCertificateExpiringWarning
+      expr: '(probe_ssl_earliest_cert_expiry - time()) / 86400 < 14'
+      for: 1h
+      labels:
+        severity: warning
+      annotations:
+        summary: "SSL Certificate expiring soon (instance {{ $labels.instance }})"
+        description: "SSL certificate expires in less than 14 days.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: BlackboxSslCertificateExpiringCritical
+      expr: '(probe_ssl_earliest_cert_expiry - time()) / 86400 < 7'
+      for: 1h
+      labels:
+        severity: critical
+      annotations:
+        summary: "SSL Certificate expiring very soon (instance {{ $labels.instance }})"
+        description: "SSL certificate expires in less than 7 days.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: BlackboxSslCertificateExpired
+      expr: '(probe_ssl_earliest_cert_expiry - time()) / 86400 < 0'
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        summary: "SSL Certificate expired (instance {{ $labels.instance }})"
+        description: "SSL certificate has expired.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    # Slow HTTP request (e.g., website responding too slowly)
+    - alert: BlackboxProbeSlowHttp
+      expr: 'avg_over_time(probe_http_duration_seconds[2m]) > 2'
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Slow HTTP response (instance {{ $labels.instance }})"
+        description: "HTTP request took more than 2 seconds to respond.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    # Slow ICMP (ping) response
+    - alert: BlackboxProbeSlowPing
+      expr: 'avg_over_time(probe_icmp_duration_seconds[2m]) > 1.5'
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Slow ping response (instance {{ $labels.instance }})"
+        description: "ICMP ping took more than 1.5 seconds.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

@@ -1,0 +1,123 @@
+groups:
+  - name: Node_Exporter
+    interval: 15s
+    rules:
+      # 🔥 Server Down Alert
+      - alert: InstanceDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Server Down: {{ $labels.instance }}"
+          description: "{{ $labels.instance }} has been unreachable for 2 minutes."
+
+      # 🔥 High CPU Usage Alert
+      - alert: HighCPUUsage
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)) > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 85% for more than 2 minutes."
+
+      # 🔥 High Memory Usage Alert
+      - alert: HighMemoryUsage
+        expr: (100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))) > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 85% for more than 2 minutes."
+
+      # 🔥 High Disk Usage Alert
+      - alert: HighDiskUsage
+        expr: (100 - ((node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100)) > 80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High Disk usage on {{ $labels.instance }}"
+          description: "Disk usage is above 80% for more than 5 minutes."
+
+      # 🔥 Host Require Reboot Alert
+      - alert: HostRequiresReboot
+        expr: node_reboot_required == 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Reboot Required: {{ $labels.exported_instance }}"
+          description: "The system {{ $labels.exported_instance }} requires a reboot."
+
+      # 🔥 Disk Will Fill Soon (24 Hours Prediction)
+      - alert: HostDiskWillFillIn24Hours
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / rate(node_filesystem_free_bytes{mountpoint="/"}[1h])) < 24 * 3600
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk Space Running Out on {{ $labels.instance }}"
+          description: "Predicted to run out of disk space within 24 hours."
+
+      # 🔥 Filesystem Read-Only Alert
+      - alert: ReadOnlyFilesystem
+        expr: node_filesystem_readonly == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Read-Only Filesystem on {{ $labels.instance }}"
+          description: "Filesystem is in read-only mode on {{ $labels.instance }}."
+
+      # 🔥 Swap Usage High
+      - alert: HostSwapIsFillingUp
+        expr: (node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes) / node_memory_SwapTotal_bytes * 100 > 75
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Swap Space Filling Up on {{ $labels.instance }}"
+          description: "Swap usage exceeds 75%. System performance may be affected."
+
+      # 🔥 High Load Average (Overloaded Server)
+      - alert: HighLoadAverage
+        expr: node_load1 > (node_cpu_cores * 1.5)
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Load Average on {{ $labels.instance }}"
+          description: "Load average ({{ $value }}) is above 1.5x CPU cores for more than 2 minutes."
+
+      # 🔥 High Network Outbound Traffic (Possible DDoS or Misuse)
+      - alert: HighOutboundNetworkTraffic
+        expr: rate(node_network_transmit_bytes_total[2m]) > 100000000
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Outbound Network Traffic on {{ $labels.instance }}"
+          description: "Outbound traffic exceeds 100MB/s for more than 2 minutes. Possible network issue."
+
+      # 🔥 System Overheating Alert
+      - alert: SystemOverheating
+        expr: node_thermal_zone_temp / 1000 > 85
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "System Overheating on {{ $labels.instance }}"
+          description: "System temperature exceeds 85°C for over 2 minutes! Immediate cooling action may be required."
+
+      # 🔥 Prometheus Target Missing Alerts
+      - alert: TargetMissing_Server
+        expr: absent(up{job="node_exporter"})
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus Target Missing: Server Node Exporter"
+          description: "Prometheus is unable to scrape `node_exporter`. The target may be down."

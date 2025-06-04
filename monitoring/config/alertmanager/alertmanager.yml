@@ -1,0 +1,19 @@
+route:
+  receiver: "email-and-teams"
+  group_by: ['alertname']
+  repeat_interval: 30m  # Avoids spamming duplicate alerts
+
+receivers:
+  - name: "email-and-teams"
+    email_configs:
+      - to: "to@email.com"
+        from: "monitoring@email.com"
+        smarthost: "smtp.email:465"
+        auth_username: "monitoring@email.com"
+        auth_password: "auth_password"
+        require_tls: false
+        send_resolved: true
+
+    webhook_configs:
+      - send_resolved: true
+        url: 'http://prometheus-msteams:2000/alertmanager'

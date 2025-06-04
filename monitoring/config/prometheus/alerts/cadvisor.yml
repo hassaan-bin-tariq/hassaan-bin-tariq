@@ -1,0 +1,105 @@
+groups:
+- name: Cadvisor
+  rules:
+  # 🔥 Alert for application containers
+  - alert: ContainerStoppedOrRemoved_app-1
+    expr: absent(container_last_seen{name="app-1", job="server-1__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container app-1 on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  - alert: ContainerStoppedOrRemoved_app-2
+    expr: absent(container_last_seen{name="app-2", job="server-1__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container app-2 on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  # 🔥 Alert for support services
+  - alert: ContainerStoppedOrRemoved_database
+    expr: absent(container_last_seen{name="database", job="server-1__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container database on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  - alert: ContainerStoppedOrRemoved_cache
+    expr: absent(container_last_seen{name="cache", job="server-1__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container cache on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  # 🔥 Alert for monitoring stack
+  - alert: ContainerStoppedOrRemoved_node_exporter
+    expr: absent(container_last_seen{name="node_exporter", job=~".*__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container node_exporter on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  - alert: ContainerStoppedOrRemoved_speedtest_exporter
+    expr: absent(container_last_seen{name="speedtest_exporter", job=~".*__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container speedtest_exporter on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  - alert: ContainerStoppedOrRemoved_cadvisor
+    expr: absent(container_last_seen{name="cadvisor", job=~".*__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container cadvisor on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  - alert: ContainerStoppedOrRemoved_traefik
+    expr: absent(container_last_seen{name="traefik", job=~".*__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container traefik on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  - alert: ContainerStoppedOrRemoved_nginx
+    expr: absent(container_last_seen{name="nginx", job=~".*__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container stopped or removed (job: {{ $labels.job }})"
+      description: "Container nginx on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  - alert: ContainerStoppedOrRemoved_monitoring_stack
+    expr: absent(container_last_seen{name=~"prometheus|alertmanager|grafana|blackbox_exporter|prometheus_teams", job=~".*__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Monitoring container stopped or removed (job: {{ $labels.job }})"
+      description: "Monitoring stack container on server {{ $labels.job }} has not been seen for more than 5 minutes."
+
+  # 🔥 Alert for custom API
+  - alert: ContainerStoppedOrRemoved_custom_api
+    expr: absent(container_last_seen{name="custom_api", job="server-1__cadvisor"})
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Custom API container stopped or removed (job: {{ $labels.job }})"
+      description: "Container custom_api on server {{ $labels.job }} has not been seen for more than 5 minutes."

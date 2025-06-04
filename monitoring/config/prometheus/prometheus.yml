@@ -1,0 +1,107 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - /etc/prometheus/alerts/*.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
+
+scrape_configs:
+  # Prometheus
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  # Node Exporter
+  - job_name: "env1__node_exporter"
+    static_configs:
+      - targets: ["server1:9100"]
+
+  # cAdvisor
+  - job_name: "env1__cadvisor"
+    static_configs:
+      - targets: ["server1:8080"]
+
+  # Blackbox - HTTP 2xx
+  - job_name: "blackbox-2xx"
+    metrics_path: "/probe"
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - https://domain1.com
+          - https://domain2.com
+          - https://domain3.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115
+
+  # Blackbox - HTTP 404 or 403
+  - job_name: "blackbox-404-or-403"
+    metrics_path: "/probe"
+    params:
+      module: [http_404_or_403]
+    static_configs:
+      - targets:
+          - https://domain1.com/api
+          - https://domain2.com/api
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Speedtest Exporter
+  - job_name: "env1__speedtest_exporter"
+    scrape_interval: 10m
+    scrape_timeout: 2m
+    static_configs:
+      - targets: ["server1:9798"]
+
+  # Traefik
+  - job_name: "env1__traefik"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["server1:8082"]
+
+  # Micrometer JVM Metrics
+  - job_name: "app_dev_jvm"
+    metrics_path: "/management/prometheus"
+    scheme: "http"
+    static_configs:
+      - targets: ["server1:39999"]
+
+  # RabbitMQ Exporter
+  - job_name: "app__rabbitmq"
+    static_configs:
+      - targets: ["server1:15692"]
+
+  # NGINX Exporter
+  - job_name: "app__nginx"
+    static_configs:
+      - targets: ["server1:9113"]
+
+  # MySQL Exporter
+  - job_name: "env1__mysql"
+    static_configs:
+      - targets: ["server1:9104"]
+
+  # PostgreSQL Exporter
+  - job_name: "env1__postgres"
+    static_configs:
+      - targets: ["server1:9187"]
+
+  # Elasticsearch Exporter
+  - job_name: "env1__elasticsearch"
+    static_configs:
+      - targets: ["elasticsearch-exporter:9114"]
