@@ -39,12 +39,17 @@ I’ve actively contributed to ISO 27001, SOC 2, and HIPAA readiness efforts, he
 
 [Infrastructure Monitoring Stack](https://github.com/hassaan-bin-tariq/hassaan-bin-tariq/tree/main/monitoring)
 
-### 2. [Project Name](link-to-repository)
-**Description**: Brief description of the project.
+### 2. [GLPI with Custom Apache & PHP Configuration](glpi)
+**Description**: A customized deployment of Elestio's GLPI with modified Apache server settings and updated PHP configurations. These changes were made to optimize performance, improve compatibility with specific plugins, and tailor the environment for enterprise IT asset management needs.
 
-**Technologies Used**: List of technologies.
+**Technologies Used**: 
+* **GLPI**: IT Asset Management
+* **Apache HTTP Server:** custom-configured
+* **PHP:** custom INI settings
+* **Docker Compose**: deployment
+* **Bash:** for entrypoint and setup scripts
 
-[Link to Repository](link-to-repository)
+[GLPI with Custom Apache & PHP Configuration](https://github.com/hassaan-bin-tariq/hassaan-bin-tariq/tree/main/glpi)
 
 ## Get in Touch
 - [LinkedIn](https://www.linkedin.com/in/hassaanbintariq)
